@@ -1,0 +1,24 @@
+---
+description: Keep work scoped to the current task only
+alwaysApply: true
+---
+
+# Scope discipline
+
+Do not expand implementation scope beyond the currently requested task.
+Do not introduce future architecture, dependencies, abstractions, or tooling
+unless required by the current task or explicitly requested.
+
+## Do
+
+- Implement only what the current milestone or task asks for
+- Use the simplest approach that satisfies the request
+- Ask before adding dependencies, folders, or infrastructure not mentioned in the task
+
+## Do not (unless explicitly requested)
+- Implement anticipated future requirements.
+- Create abstractions or structure solely for possible future use.
+- Install dependencies "for later".
+- Perform unrelated refactoring while completing a focused task.
+
+When unsure whether something is in scope, prefer the smaller change and ask.
