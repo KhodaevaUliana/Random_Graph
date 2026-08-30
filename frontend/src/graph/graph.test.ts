@@ -9,6 +9,28 @@ function graphFromAdjacencyLists(n: number, neighbors: number[][]): Graph {
   return { n, neighbors }
 }
 
+function canonicalizeComponents(components: number[][]): number[][] {
+  return components
+    .map((component) => [...component].sort((a, b) => a - b))
+    .sort((left, right) => {
+      if (left.length !== right.length) {
+        return left.length - right.length
+      }
+
+      for (let i = 0; i < left.length; i++) {
+        if (left[i] !== right[i]) {
+          return left[i] - right[i]
+        }
+      }
+
+      return 0
+    })
+}
+
+function expectComponentPartition(actual: number[][], expected: number[][]): void {
+  expect(canonicalizeComponents(actual)).toEqual(canonicalizeComponents(expected))
+}
+
 describe('generateErdosRenyi', () => {
   it('rejects invalid n', () => {
     expect(() => generateErdosRenyi(-1, 0.5)).toThrow(RangeError)
@@ -115,15 +137,14 @@ describe('connectedComponents', () => {
     const graph = graphFromAdjacencyLists(3, [[], [], []])
     const components = connectedComponents(graph)
 
-    expect(components).toHaveLength(3)
-    expect(components.map((c) => [...c].sort())).toEqual([[0], [1], [2]])
+    expectComponentPartition(components, [[0], [1], [2]])
   })
 
   it('finds multiple components', () => {
     const graph = graphFromAdjacencyLists(4, [[1], [0], [3], [2]])
     const components = connectedComponents(graph)
 
-    expect(components.map((c) => [...c].sort())).toEqual([
+    expectComponentPartition(components, [
       [0, 1],
       [2, 3],
     ])
@@ -134,7 +155,7 @@ describe('connectedComponents', () => {
     const components = connectedComponents(graph)
 
     expect(components).toHaveLength(1)
-    expect([...components[0]].sort()).toEqual([0, 1, 2])
+    expectComponentPartition(components, [[0, 1, 2]])
   })
 
   it('returns an empty list for n = 0', () => {

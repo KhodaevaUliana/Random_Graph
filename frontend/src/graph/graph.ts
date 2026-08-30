@@ -11,7 +11,11 @@ export type GraphStats = {
   averageDegree: number
 }
 
-type Rng = () => number
+/**
+ * Random source for G(n,p) generation. Each call must return a value in [0, 1).
+ * An unordered pair (i, j) is included when rng() < p.
+ */
+export type UnitIntervalRng = () => number
 
 function validateN(n: number): void {
   if (!Number.isInteger(n) || n < 0) {
@@ -48,7 +52,11 @@ function graphFromEdges(n: number, edges: ReadonlyArray<readonly [number, number
   return { n, neighbors }
 }
 
-export function generateErdosRenyi(n: number, p: number, rng: Rng = Math.random): Graph {
+export function generateErdosRenyi(
+  n: number,
+  p: number,
+  rng: UnitIntervalRng = Math.random,
+): Graph {
   validateN(n)
   validateP(p)
 
